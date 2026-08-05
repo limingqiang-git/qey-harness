@@ -1,0 +1,21 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/recap-stop-hook.sh" }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/find-code-reminder.sh" },
+          { "type": "command", "command": "bash .claude/hooks/workflow-state-reminder.sh" }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "qey-harness",
+  "version": "2.0.2",
+  "description": "项目级 AI 编码协作工程框架 — 让 AI 写代码稳定交付、可审计、可复盘。Agent = Model + Harness。",
+  "type": "module",
+  "bin": {
+    "qey": "bin/qey.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/qey.js",
+    "src/",
+    ".qey/",
+    "adapters/",
+    "HOW_TO_USE.md"
+  ],
+  "keywords": [
+    "ai",
+    "harness",
+    "claude-code",
+    "codex",
+    "omp",
+    "agent",
+    "workflow",
+    "tdd",
+    "developer-tools",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/limingqiang-git/qey-harness.git"
+  },
+  "homepage": "https://github.com/limingqiang-git/qey-harness#readme",
+  "author": "limingqiang",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

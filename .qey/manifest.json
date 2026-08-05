@@ -1,0 +1,100 @@
+{
+  "version": "2.0.0",
+  "comment": "2.0:品牌瘦身(.qey/)+ Node CLI 壳(qey)+ 命令重构(qey init/doctor/change + /qey:scan|commit|log|distill)+ 数据驱动更新 + hash 单源。breaking:不兼容 1.x。",
+  "canonical": {
+    "commands_dir": ".qey/commands/",
+    "comment": "平台无关 canonical 命令 body。三 adapter 薄包装指向这里,改一处全平台生效。"
+  },
+  "adapters": {
+    "claude": {
+      "wrapper_dir": "adapters/claude/",
+      "produces_in_project": [
+        ".claude/commands/",
+        ".claude/hooks/",
+        ".claude/settings.json"
+      ],
+      "generated": true,
+      "comment": "薄包装从 canonical 生成;init 时复制到项目 .claude/。AGENTS.md 由 init 建软链指向 .claude/CLAUDE.md。"
+    },
+    "codex": {
+      "wrapper_dir": "adapters/codex/",
+      "produces_in_project": [
+        ".codex/hooks.json",
+        ".agents/skills/"
+      ],
+      "uses_agents_adapter": true,
+      "comment": "Codex 通过 AGENTS.md(软链 CLAUDE.md)+ .agents/skills/(agents adapter 薄包装)工作。"
+    },
+    "agents": {
+      "wrapper_dir": "adapters/agents/skills/",
+      "produces_in_project": [
+        ".agents/skills/source-command-*/"
+      ],
+      "shared_with": ["codex", "pi"],
+      "comment": "通用 agent 薄包装,指向 .qey/commands/ canonical。"
+    },
+    "pi": {
+      "wrapper_dir": "adapters/pi/",
+      "produces_in_project": [
+        ".omp/commands/",
+        ".omp/RULES.md",
+        ".omp/config.yml",
+        ".omp/extensions/*.ts"
+      ],
+      "generated": true,
+      "omp_native": true,
+      "comment": "omp adapter。RULES.md=sticky 红线;config.yml=权限映射;extensions=TS hooks。"
+    }
+  },
+  "file_classes": {
+    "overwrite": [
+      ".qey/commands/",
+      ".qey/workflow/",
+      ".qey/rules/",
+      ".qey/agents",
+      ".qey/guardrails/permissions.md",
+      ".qey/guards/",
+      ".qey/templates/",
+      ".qey/journal/",
+      ".qey/knowledge/README.md",
+      ".qey/knowledge/踩坑记录/_template.md",
+      ".qey/knowledge/业务演进/_template.md",
+      ".qey/memory/README.md",
+      ".qey/changes/_template.md",
+      ".qey/changes/README.md",
+      ".qey/specs/_template.md",
+      ".qey/specs/README.md",
+      ".qey/domain/业务领域/_template.md",
+      ".qey/domain/README.md",
+      ".qey/README.md",
+      ".qey/change.sh",
+      ".qey/log.sh",
+      ".qey/commit.sh",
+      ".qey/archive.sh",
+      ".qey/manifest.json",
+      "adapters/",
+      "HOW_TO_USE.md",
+      "AGENTS.md"
+    ],
+    "diff_only": [
+      "CLAUDE.md(skeleton,含 [init 填充] 占位)",
+      ".qey/knowledge/项目级记忆.md(含占位)",
+      ".qey/rules/各层规范.md(含占位)",
+      ".qey/rules/历史遗留陷阱.md(scan 生成)",
+      ".qey/domain/*.md(除 _template,scan 填充)",
+      ".qey/knowledge/踩坑记录/<域>.md(项目踩坑)",
+      ".qey/knowledge/业务演进/<流程>.md(项目演进)",
+      ".qey/specs/<域>/spec.md(项目真相,change 归档 merge 而来)",
+      ".qey/changes/<id>/(项目 change)",
+      ".claude/settings.local.json(scan 生成)",
+      ".claude/CLAUDE.md(项目填充实例)",
+      ".omp/config.yml(项目填充实例)"
+    ]
+  },
+  "single_source": [
+    "AGENTS.md -> CLAUDE.md(软链)",
+    ".qey/commands/*.md -> canonical(三 adapter 薄包装都指向这里)",
+    ".agents/skills/source-command-*/SKILL.md -> 指向 .qey/commands/*(薄包装)",
+    ".omp/commands/*.md -> 指向 .qey/commands/*(薄包装)"
+  ]
+}

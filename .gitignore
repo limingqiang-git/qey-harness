@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+
+# Node
+node_modules/
+*.log
+
+# adapter 产物(项目接入后生成,不进模板仓库 git)
+# 注意:adapters/(模板源)要进 git;.claude/ .codex/ .omp/ 等是项目实例,不进
+/.claude/
+/.codex/
+/.agents/
+/.omp/
+/.pi/
+/.opencode/
+/.cursor/
+/.codebuddy/
+
+# AI 会话产物
+/.qey/changes/archive/
+/.qey/journal/*.md
+docs/

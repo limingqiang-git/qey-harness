@@ -1,0 +1,123 @@
+# .omp/config.yml — qey-harness 权限(pi adapter)
+#
+# 本文件由 `.qey/guardrails/permissions.md` 种子映射而来。
+# `/qey-init` 会按检测到的技术栈**追加** formatter 规则(如 PHP→`*pint*` prompt / JS→`*prettier*` prompt)。
+#
+# omp 独有优势:
+# - `bash.patterns` 支持 glob 匹配命令,比 Claude 的 `Bash(...)` 更精细
+# - omp 的 critical-command guard 会强制某些命令仍需确认,即使 patterns 兜底 allow
+#
+# 三档语义(与 permissions.md 对齐):
+#   allow  = AI 自动跑(低风险可逆)        例:git add / git commit
+#   prompt = 每次打断确认(有副作用/改状态) 例:git push / merge / checkout
+#   deny   = 永远禁止(危险/不可逆)         例:rm -rf / git push --force / reset --hard
+
+tools:
+  approvalMode: write          # 自动批 read + workspace-write;危险走 patterns
+  approval:
+    bash: prompt               # 默认 bash 打断(由 patterns 精细放行)
+
+bash:
+  patterns:
+    # ── allow:低风险可逆 ──
+    - match: "git add *"
+      approval: allow
+    - match: "git commit *"
+      approval: allow
+    - match: "git status*"
+      approval: allow
+    - match: "git diff*"
+      approval: allow
+    - match: "git log*"
+      approval: allow
+    - match: "git show*"
+      approval: allow
+    - match: "git rev-parse*"
+      approval: allow
+    - match: "git branch --show-current"
+      approval: allow
+    - match: "git stash list"
+      approval: allow
+    - match: "ls *"
+      approval: allow
+    - match: "cat *"
+      approval: allow
+    - match: "grep *"
+      approval: allow
+    - match: "rg *"
+      approval: allow
+    - match: "find *"
+      approval: allow
+    - match: "wc *"
+      approval: allow
+    - match: "echo *"
+      approval: allow
+    - match: "test *"
+      approval: allow
+
+    # ── deny:危险/不可逆 ──
+    - match: "rm -rf *"
+      approval: deny
+    - match: "rm -fr *"
+      approval: deny
+    - match: "git push --force*"
+      approval: deny
+    - match: "git push -f*"
+      approval: deny
+    - match: "git reset --hard*"
+      approval: deny
+    - match: "git clean *"
+      approval: deny
+    - match: "sudo *"
+      approval: deny
+    - match: "chmod -R *"
+      approval: deny
+    - match: "chown -R *"
+      approval: deny
+    - match: "dd *"
+      approval: deny
+    - match: "mkfs*"
+      approval: deny
+
+    # ── prompt:有副作用/改状态 ──
+    - match: "git push *"
+      approval: prompt
+    - match: "git merge *"
+      approval: prompt
+    - match: "git checkout *"
+      approval: prompt
+    - match: "git switch *"
+      approval: prompt
+    - match: "git branch *"
+      approval: prompt
+    - match: "git rebase *"
+      approval: prompt
+    - match: "git reset *"
+      approval: prompt
+    - match: "git tag *"
+      approval: prompt
+    - match: "git stash *"
+      approval: prompt
+    - match: "git mv *"
+      approval: prompt
+    - match: "git rm *"
+      approval: prompt
+    - match: "mv *"
+      approval: prompt
+    - match: "cp *"
+      approval: prompt
+    - match: "mkdir *"
+      approval: allow
+    - match: "touch *"
+      approval: allow
+    - match: "*migrate*"
+      approval: prompt
+    - match: "*docker*rm*"
+      approval: deny
+    - match: "*docker*rmi*"
+      approval: prompt
+
+    # ── 兜底 ──
+    # 注:omp critical-command guard 会强制某些命令仍需确认,即使这里 allow
+    - match: "*"
+      approval: allow

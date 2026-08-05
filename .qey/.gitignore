@@ -1,0 +1,5 @@
+
+# 1.7: workflow-state 运行时状态(hook 读,不进 git)
+.qey/.workflow-state
+.qey/.evidence.log
+.qey/.recap-pending.md
